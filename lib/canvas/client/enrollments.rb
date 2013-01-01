@@ -14,6 +14,7 @@ module Canvas
       #   @option options [String] :course_section_id The ID of the course section to enroll the student in
       #   @option options [Boolean] :notify If false (0 or “false”), a notification will not be sent to the enrolled user. Notifications are sent by default
       #   @option options [Boolean] :sis_course If true, treats course_id param as an sis_course_id
+      #   @option options [Boolean] :sis_user If true, treats user_id param as an sis_user_id
       #   @example Creates a new enrollment in course ID 5 for user with user ID '1324'
       #     Canvas.enroll_in_course(5, 1324,
       #                             :type => 'active',
@@ -32,6 +33,9 @@ module Canvas
         if options[:sis_course] == true
           sis_course_id = course_id.unpack("H*")[0]
           course_id = "hex:sis_course_id:#{sis_course_id}"
+        end
+        if options[:sis_user] == true
+          h.enrollment!.user_id = "sis_user_id:#{user_id}"
         end
         response = post("courses/#{course_id}/enrollments", h)
         response
