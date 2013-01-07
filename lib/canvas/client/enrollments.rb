@@ -41,8 +41,25 @@ module Canvas
         response
       end
 
-      def enroll_in_section
-        # POST sections/:section_id/enrollments
+      # Same as course enrollment with different resource url for section enrollment
+      # POST sections/:section_id/enrollments
+      def enroll_in_section(section_id, user_id, options={})
+        h = Hashie::Mash.new
+        h.enrollment!
+        h.enrollment!.user_id = user_id
+        h.enrollment!.type = options[:type] if options[:type] # defaults to 'StudentEnrollment'
+        h.enrollment!.enrollment_state = options[:enrollment_state] if options[:enrollment_state] # defaults to to 'invited'
+        h.enrollment!.notify = options[:notify] if options[:notify] # defaults to "true"
+        
+        if options[:sis_section] == true
+          sis_section_id = section_id.unpack("H*")[0]
+          section_id = "hex:sis_section_id:#{sis_section_id}"
+        end
+        if options[:sis_user] == true
+          h.enrollment!.user_id = "sis_user_id:#{user_id}"
+        end
+        response = post("sections/#{section_id}/enrollments", h)
+        response
       end
 
       def list_user_enrollments
