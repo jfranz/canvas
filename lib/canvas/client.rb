@@ -10,5 +10,6 @@ module Canvas
 
     include Canvas::Client::Users
     include Canvas::Client::Enrollments
+    include Canvas::Client::Admins
   end
 end
