@@ -18,7 +18,7 @@ module Canvas
       # @see https://canvas.instructure.com/doc/api/admins.html
       def make_account_admin(account_id, user_id, options={})
         h = Hashie::Mash.new
-        h.user_id = unique_id
+        h.user_id = user_id
         h.role = options[:role] if options[:role]
         h.send_confirmation = options[:send_confirmation] if options[:send_confirmation]
 
